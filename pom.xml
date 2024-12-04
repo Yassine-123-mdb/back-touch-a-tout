@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.1.5.Final</version> <!-- Version compatible avec Spring Boot 3.x -->
+            <version>6.1.5.Final</version>
         </dependency>
 
         <!-- Spring Boot Starter OAuth2 Client -->
@@ -92,20 +92,25 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>4.2.1</version> <!-- Utilisez la dernière version disponible -->
+            <version>4.2.1</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.3.0</version>
-            <configuration>
-                <encoding>UTF-8</encoding>
-            </configuration>
-        </plugin>
+            <!-- Plugin Maven pour gérer les ressources avec l'encodage UTF-8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <!-- Exclure les fichiers .properties du filtrage -->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>properties</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
 
             <!-- Plugin Spring Boot Maven pour la gestion des builds -->
             <plugin>
