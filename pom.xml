@@ -9,7 +9,7 @@
 		<version>3.3.4</version>
 		<relativePath />
 	</parent>
-	<groupId>com.nadhem</groupId>
+	<groupId>com.yassine</groupId>
 	<artifactId>users-microservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>users-microservice</name>
@@ -91,11 +91,7 @@
 
 
 
-    <dependency>
-    	<groupId>com.yassine</groupId>
-    	<artifactId>phones</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
+    
 	</dependencies>
 
 	<build>

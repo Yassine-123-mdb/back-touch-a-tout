@@ -22,7 +22,8 @@ import com.yassine.users.service.UserService;
 import com.yassine.users.service.register.RegistrationRequest;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://touche-tout.vercel.app/")
+
 public class UserRestController {
 	@Autowired
 	UserService userService;
