@@ -38,4 +38,8 @@ public class User {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), 
                inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_service", joinColumns = @JoinColumn(name = "user_id"), 
+               inverseJoinColumns = @JoinColumn(name = "id"))
+    private List<Services> services;
 }

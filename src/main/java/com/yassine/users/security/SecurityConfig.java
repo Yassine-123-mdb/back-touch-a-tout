@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
@@ -33,7 +32,6 @@ public class SecurityConfig {
  	@Autowired
  	AuthenticationManager authMgr;
 	
-	
  	@Bean
 	public AuthenticationManager authManager(HttpSecurity http, 
 			BCryptPasswordEncoder bCryptPasswordEncoder, 
@@ -46,31 +44,31 @@ public class SecurityConfig {
 	      .build();
 	}
  	
- 	 @Bean
-     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
-		    http.csrf().disable()
-		    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		    
-		    .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-                @Override
-                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                    CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app/"));
-                    cors.setAllowedMethods(Collections.singletonList("*"));
-                    cors.setAllowCredentials(true);
-                    cors.setAllowedHeaders(Collections.singletonList("*"));
-                    cors.setExposedHeaders(Collections.singletonList("Authorization"));
-                    cors.setMaxAge(3600L);
-                    return cors;
-                }
-            }))
-            
-		    
-		    
-		                        .authorizeHttpRequests()
-		                        .requestMatchers("/login","/register/**","/verifyEmail/**").permitAll()
-		                        .anyRequest().authenticated().and()
-		                        .addFilterBefore(new JWTAuthenticationFilter (authMgr),UsernamePasswordAuthenticationFilter.class);
-		 return http.build();
-	}
+ 	@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
+        http.csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        
+        .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration cors = new CorsConfiguration();
+                cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                cors.setAllowedMethods(Collections.singletonList("*"));
+                cors.setAllowCredentials(true);  // If you are sending cookies or authorization headers
+                cors.setAllowedHeaders(Collections.singletonList("*"));
+                cors.setExposedHeaders(Collections.singletonList("Authorization"));
+                cors.setMaxAge(3600L);
+                return cors;
+            }
+        }))
+        .authorizeHttpRequests()
+        .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService","/upload-image").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 }
