@@ -18,6 +18,5 @@ public interface UserService {
 	User registerUser(RegistrationRequest request);
 	public void sendEmailUser(User u, String code);
 	public User validateToken(String code);
-	public String generateToken(User user);
 
 }

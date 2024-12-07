@@ -129,17 +129,7 @@ public class UserServiceImpl implements UserService {
         emailSender.sendEmail(u.getEmail(), emailBody);
     }
 
-    @Override
-    public String generateToken(User user) {
-        String SECRET_KEY = "your-secret-key";
-        return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("roles", user.getRoles())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-    }
+    
 
     @Override
     public User validateToken(String code) {
