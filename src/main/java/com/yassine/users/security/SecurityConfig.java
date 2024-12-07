@@ -1,5 +1,6 @@
 package com.yassine.users.security;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +55,11 @@ public class SecurityConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cors = new CorsConfiguration();
-                cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app"));
-                cors.setAllowedMethods(Collections.singletonList("*"));
-                cors.setAllowCredentials(true);  // If you are sending cookies or authorization headers
-                cors.setAllowedHeaders(Collections.singletonList("*"));
-                cors.setExposedHeaders(Collections.singletonList("Authorization"));
-                cors.setMaxAge(3600L);
+                cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Allow specific origin
+                cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly define methods
+                cors.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Include necessary headers
+                cors.setExposedHeaders(Arrays.asList("Authorization")); // Expose token if necessary
+
                 return cors;
             }
         }))
