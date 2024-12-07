@@ -1,6 +1,5 @@
 package com.yassine.users.security;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ public class SecurityConfig {
  	@Autowired
  	AuthenticationManager authMgr;
 	
+	
  	@Bean
 	public AuthenticationManager authManager(HttpSecurity http, 
 			BCryptPasswordEncoder bCryptPasswordEncoder, 
@@ -45,31 +45,31 @@ public class SecurityConfig {
 	      .build();
 	}
  	
- 	@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
-        http.csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        
-        .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration cors = new CorsConfiguration();
-                cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Allow specific origin
-                cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly define methods
-                cors.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Include necessary headers
-                cors.setExposedHeaders(Arrays.asList("Authorization")); // Expose token if necessary
-                cors.setAllowCredentials(true);
-
-                return cors;
-            }
-        }))
-         .authorizeHttpRequests()
-         .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService","/upload-image").permitAll()
-         .anyRequest().authenticated()
-         .and()
-         .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
+ 	 @Bean
+     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
+		    http.csrf().disable()
+		    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		    
+		    .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+                @Override
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                    CorsConfiguration cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app"));
+                    cors.setAllowedMethods(Collections.singletonList("*"));
+                    cors.setAllowCredentials(true);
+                    cors.setAllowedHeaders(Collections.singletonList("*"));
+                    cors.setExposedHeaders(Collections.singletonList("Authorization"));
+                    cors.setMaxAge(3600L);
+                    return cors;
+                }
+            }))
+            
+		    
+		    
+		                        .authorizeHttpRequests()
+		                        .requestMatchers("/login","/register/**","/verifyEmail/**").permitAll()
+		                        .anyRequest().authenticated().and()
+		                        .addFilterBefore(new JWTAuthenticationFilter (authMgr),UsernamePasswordAuthenticationFilter.class);
+		 return http.build();
+	}
 }
