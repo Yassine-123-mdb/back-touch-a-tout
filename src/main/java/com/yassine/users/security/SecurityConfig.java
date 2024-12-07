@@ -63,12 +63,12 @@ public class SecurityConfig {
 
                 return cors;
             }
-        }))
-        .authorizeHttpRequests()
-        .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService","/upload-image").permitAll()
-        .anyRequest().authenticated()
-        .and()
-        .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
+        }));
+//        .authorizeHttpRequests()
+//        .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService","/upload-image").permitAll()
+//        .anyRequest().authenticated()
+//        .and()
+//        .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
