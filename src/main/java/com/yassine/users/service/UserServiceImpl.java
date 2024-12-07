@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private VerificationTokenRepository verificationTokenRepo;
 
+	@Autowired
+    public UserServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 	@Override
 	public User saveUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
