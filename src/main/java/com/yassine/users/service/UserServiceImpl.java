@@ -1,7 +1,11 @@
 package com.yassine.users.service;
 
 import java.util.ArrayList;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -131,7 +135,17 @@ public class UserServiceImpl implements UserService {
 		 
 		emailSender.sendEmail(u.getEmail(), emailBody);
 		}
-
+	@Override
+	public String generateToken(User user) {
+	    String SECRET_KEY = "your-secret-key"; // Remplacez par une clé secrète forte
+	    return Jwts.builder()
+	            .setSubject(user.getUsername())
+	            .claim("roles", user.getRoles()) // Ajouter les rôles comme claim
+	            .setIssuedAt(new Date())
+	            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // Expiration en 24h
+	            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+	            .compact();
+	}
 	@Override
 	public User validateToken(String code) {
 		VerificationToken token = verificationTokenRepo.findByToken(code);

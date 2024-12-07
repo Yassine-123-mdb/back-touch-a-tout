@@ -1,11 +1,13 @@
 package com.yassine.users.restControllers;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.management.relation.RoleNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,8 @@ import com.yassine.users.service.register.RegistrationRequest;
 public class UserRestController {
 	@Autowired
 	UserService userService;
-
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	UserRepository userRep;
 
@@ -44,6 +47,19 @@ public class UserRestController {
 	        return ResponseEntity.badRequest().body(e.getMessage());
 	    }
 	}
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody User userRequest) {
+	    // Récupérer l'utilisateur par nom d'utilisateur ou email
+	    User user = userService.findUserByUsername(userRequest.getUsername());
+	    if (user == null || !bCryptPasswordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
+	        return ResponseEntity.status(401).body("Nom d'utilisateur ou mot de passe incorrect !");
+	    }
+	    
+	    // Générer un JWT
+	    String token = userService.generateToken(user);
+	    return ResponseEntity.ok(Map.of("token", token, "username", user.getUsername()));
+	}
+
 
 
 	@GetMapping("/verifyEmail/{token}")
