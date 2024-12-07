@@ -59,6 +59,7 @@ public class SecurityConfig {
                 cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly define methods
                 cors.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Include necessary headers
                 cors.setExposedHeaders(Arrays.asList("Authorization")); // Expose token if necessary
+                cors.setAllowCredentials(true);
 
                 return cors;
             }
