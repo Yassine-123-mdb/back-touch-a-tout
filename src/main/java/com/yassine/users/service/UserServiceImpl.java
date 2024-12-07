@@ -1,9 +1,6 @@
 package com.yassine.users.service;
 
 import java.util.ArrayList;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import java.util.Date;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,143 +25,141 @@ import com.yassine.users.service.register.VerificationToken;
 import com.yassine.users.service.register.VerificationTokenRepository;
 import com.yassine.users.util.EmailSender;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRep;
+    @Autowired
+    private UserRepository userRep;
 
-	@Autowired
-	private RoleRepository roleRep;
+    @Autowired
+    private RoleRepository roleRep;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Autowired
-	EmailSender emailSender;
-	@Autowired
-	private VerificationTokenRepository verificationTokenRepo;
+    @Autowired
+    private EmailSender emailSender;
 
-	@Autowired
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepo;
+
+    @Autowired
     public UserServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-	@Override
-	public User saveUser(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		return userRep.save(user);
-	}
 
-	@Override
-	public User addRoleToUser(String username, String rolename) {
-		User usr = userRep.findByUsername(username);
-		Role r = roleRep.findByRole(rolename);
+    @Override
+    public User saveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRep.save(user);
+    }
 
-		usr.getRoles().add(r);
-		return usr;
-	}
+    @Override
+    public User addRoleToUser(String username, String rolename) {
+        User usr = userRep.findByUsername(username);
+        Role r = roleRep.findByRole(rolename);
 
-	@Override
-	public Role addRole(Role role) {
-		return roleRep.save(role);
-	}
+        usr.getRoles().add(r);
+        return usr;
+    }
 
-	@Override
-	public User findUserByUsername(String username) {
-		return userRep.findByUsername(username);
-	}
+    @Override
+    public Role addRole(Role role) {
+        return roleRep.save(role);
+    }
 
-	@Override
-	public List<User> findAllUsers() {
-		return userRep.findAll();
-	}
+    @Override
+    public User findUserByUsername(String username) {
+        return userRep.findByUsername(username);
+    }
 
-	@Override
-	public User registerUser(RegistrationRequest request) {
-	    // Vérifier si l'email existe déjà
-	    Optional<User> optionalUser = userRep.findByEmail(request.getEmail());
-	    if (optionalUser.isPresent()) {
-	        throw new EmailAlreadyExistsException("Email déjà existant!");
-	    }
+    @Override
+    public List<User> findAllUsers() {
+        return userRep.findAll();
+    }
 
-	    // Créer un nouvel utilisateur avec les informations fournies
-	    User newUser = new User();
-	    newUser.setUsername(request.getUsername());
-	    newUser.setEmail(request.getEmail());
-	    newUser.setPrenom(request.getPrenom());
-	    newUser.setAdress(request.getAdress());
-	    newUser.setTel(request.getTel());
-	    newUser.setSiret(request.getSiret());
-	    newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword())); // Crypter le mot de passe
-	    newUser.setEnabled(true); // Le compte est inactif par défaut
+    @Override
+    public User registerUser(RegistrationRequest request) {
+        Optional<User> optionalUser = userRep.findByEmail(request.getEmail());
+        if (optionalUser.isPresent()) {
+            throw new EmailAlreadyExistsException("Email déjà existant!");
+        }
 
-	    // Associer un rôle par défaut
-	    Role r = roleRep.findByRole(request.getRoles());
-	    List<Role> roles = new ArrayList<>();
-	    roles.add(r);
-	    newUser.setRoles(roles);
+        User newUser = new User();
+        newUser.setUsername(request.getUsername());
+        newUser.setEmail(request.getEmail());
+        newUser.setPrenom(request.getPrenom());
+        newUser.setAdress(request.getAdress());
+        newUser.setTel(request.getTel());
+        newUser.setSiret(request.getSiret());
+        newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        newUser.setEnabled(false);
 
-	    // Sauvegarder l'utilisateur
-	    userRep.save(newUser);
+        Role r = roleRep.findByRole(request.getRoles());
+        List<Role> roles = new ArrayList<>();
+        roles.add(r);
+        newUser.setRoles(roles);
 
-	    // Générer un code de vérification
-	    String code = this.generateCode();
-	    VerificationToken token = new VerificationToken(code, newUser);
-	    verificationTokenRepo.save(token);
+        userRep.save(newUser);
 
-	    // Envoyer un email de vérification à l'utilisateur
-	    //sendEmailUser(newUser, token.getToken());
+        String code = this.generateCode();
+        VerificationToken token = new VerificationToken(code, newUser);
+        verificationTokenRepo.save(token);
 
-	    return newUser;
-	    
-	}
+        sendEmailUser(newUser, token.getToken());
 
+        return newUser;
+    }
 
-	private String generateCode() {
-		 Random random = new Random();
-		 Integer code = 100000 + random.nextInt(900000);
+    private String generateCode() {
+        Random random = new Random();
+        Integer code = 100000 + random.nextInt(900000);
 
-		 return code.toString();
+        return code.toString();
+    }
 
-	}
-	
-	@Override
-	public void sendEmailUser(User u, String code) {
-		 String emailBody ="Bonjour "+ "<h1>"+u.getUsername() +"</h1>" +
-		 " Votre code de validation est "+"<h1>"+code+"</h1>";
-		 
-		emailSender.sendEmail(u.getEmail(), emailBody);
-		}
-	@Override
-	public String generateToken(User user) {
-	    String SECRET_KEY = "your-secret-key"; // Remplacez par une clé secrète forte
-	    return Jwts.builder()
-	            .setSubject(user.getUsername())
-	            .claim("roles", user.getRoles()) // Ajouter les rôles comme claim
-	            .setIssuedAt(new Date())
-	            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // Expiration en 24h
-	            .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-	            .compact();
-	}
-	@Override
-	public User validateToken(String code) {
-		VerificationToken token = verificationTokenRepo.findByToken(code);
-		
-		if(token == null){
-			throw new InvalidTokenException("Invalid Token !!!!!!!");
-		}
+    @Override
+    public void sendEmailUser(User u, String code) {
+        String emailBody = "Bonjour " + "<h1>" + u.getUsername() + "</h1>" +
+                " Votre code de validation est " + "<h1>" + code + "</h1>";
 
-		User user = token.getUser();
-		
-		Calendar calendar = Calendar.getInstance();
-		
-		if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
-			verificationTokenRepo.delete(token);
-			throw new ExpiredTokenException("expired Token");
-		}
-		
-		user.setEnabled(true);
-		userRep.save(user);
-		return user;
-	}
+        emailSender.sendEmail(u.getEmail(), emailBody);
+    }
+
+    @Override
+    public String generateToken(User user) {
+        String SECRET_KEY = "your-secret-key";
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("roles", user.getRoles())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    @Override
+    public User validateToken(String code) {
+        VerificationToken token = verificationTokenRepo.findByToken(code);
+
+        if (token == null) {
+            throw new InvalidTokenException("Invalid Token!");
+        }
+
+        User user = token.getUser();
+
+        Calendar calendar = Calendar.getInstance();
+
+        if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
+            verificationTokenRepo.delete(token);
+            throw new ExpiredTokenException("Expired Token");
+        }
+
+        user.setEnabled(true);
+        userRep.save(user);
+        return user;
+    }
 }
