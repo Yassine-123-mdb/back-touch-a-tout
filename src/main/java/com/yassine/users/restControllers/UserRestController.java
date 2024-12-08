@@ -22,7 +22,6 @@ import com.yassine.users.service.UserService;
 import com.yassine.users.service.register.RegistrationRequest;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class UserRestController {
 	@Autowired
 	UserService userService;
