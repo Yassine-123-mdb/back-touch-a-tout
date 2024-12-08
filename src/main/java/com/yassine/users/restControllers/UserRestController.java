@@ -50,6 +50,17 @@ public class UserRestController {
 	public User verifyEmail(@PathVariable("token") String token) {
 		return userService.validateToken(token);
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+	    try {
+	        User user = userService.authenticateUser(loginRequest);
+	        return ResponseEntity.ok(user);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body(e.getMessage());
+	    }
+	}
+
 
 	
 }

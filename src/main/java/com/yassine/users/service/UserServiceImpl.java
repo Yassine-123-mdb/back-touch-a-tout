@@ -17,6 +17,7 @@ import com.yassine.users.entities.Role;
 import com.yassine.users.entities.User;
 import com.yassine.users.repos.RoleRepository;
 import com.yassine.users.repos.UserRepository;
+import com.yassine.users.restControllers.LoginRequest;
 import com.yassine.users.service.exception.EmailAlreadyExistsException;
 import com.yassine.users.service.exception.ExpiredTokenException;
 import com.yassine.users.service.exception.InvalidTokenException;
@@ -49,6 +50,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    public User authenticateUser(LoginRequest loginRequest) {
+        User user = userRep.findByUsername(loginRequest.getUsername());
+        
+        if (user == null || !bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Nom d'utilisateur ou mot de passe incorrect.");
+        }
+        
+        return user;
     }
 
     @Override
