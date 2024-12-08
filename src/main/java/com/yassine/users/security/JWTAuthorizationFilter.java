@@ -18,29 +18,41 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("Authorization");
 
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.replace("Bearer ", "");
-            try {
-                // Vérifier le token
-                Claims claims = Jwts.parser()
-                    .setSigningKey("SecParams.SECRET")
-                    .parseClaimsJws(token)
-                    .getBody();
-                // Authentifier l'utilisateur basé sur les claims
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Token invalide");
-                return;
-            }
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String jwt = request.getHeader("Authorization");
+
+        if (jwt == null || !jwt.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET)).build();
+        jwt = jwt.substring(7); // Remove the "Bearer " prefix
+
+        try {
+            DecodedJWT decodedJWT = verifier.verify(jwt);
+            String username = decodedJWT.getSubject();
+            List<String> roles = decodedJWT.getClaims().get("roles").asList(String.class);
+
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            for (String role : roles) {
+                authorities.add(new SimpleGrantedAuthority(role));
+            }
+
+            UsernamePasswordAuthenticationToken user =
+                    new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+            SecurityContextHolder.getContext().setAuthentication(user);
+        } catch (JWTVerificationException exception) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         filterChain.doFilter(request, response);
     }
 }
