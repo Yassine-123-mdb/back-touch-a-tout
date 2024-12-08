@@ -54,7 +54,7 @@ public class SecurityConfig {
                 @Override
                 public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                     CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app"));
                     cors.setAllowedMethods(Collections.singletonList("*"));
                     cors.setAllowCredentials(true);
                     cors.setAllowedHeaders(Collections.singletonList("*"));
