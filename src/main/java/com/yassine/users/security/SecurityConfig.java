@@ -23,52 +23,48 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
-	@Autowired
- 	UserDetailsService userDetailsService;
- 	
- 	@Autowired
-	BCryptPasswordEncoder bCryptPasswordEncoder;
- 	
- 	@Autowired
- 	AuthenticationManager authMgr;
-	
- 	@Bean
-	public AuthenticationManager authManager(HttpSecurity http, 
-			BCryptPasswordEncoder bCryptPasswordEncoder, 
-			UserDetailsService userDetailsService) 
-	  throws Exception {
-	    return http.getSharedObject(AuthenticationManagerBuilder.class)
-	      .userDetailsService(userDetailsService)
-	      .passwordEncoder(bCryptPasswordEncoder)
-	      .and()
-	      .build();
-	}
- 	
- 	@Bean
+
+    @Autowired
+    UserDetailsService userDetailsService;
+    
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    
+    @Autowired
+    AuthenticationManager authMgr;
+    
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http, 
+                                              BCryptPasswordEncoder bCryptPasswordEncoder, 
+                                              UserDetailsService userDetailsService) 
+            throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder)
+                .and()
+                .build();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
         http.csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        
-        .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration cors = new CorsConfiguration();
-                cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Allow specific origin
-                cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly define methods
-                cors.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Include necessary headers
-                cors.setExposedHeaders(Arrays.asList("Authorization")); // Expose token if necessary
-                cors.setAllowCredentials(true);
-
-                return cors;
-            }
-        }))
-        .authorizeHttpRequests()
-        .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService","/upload-image").permitAll()
-        .anyRequest();//.authenticated()
-//        .and()
-//        .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Allow specific origin
+                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly define methods
+                corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Include necessary headers
+                corsConfig.setExposedHeaders(Arrays.asList("Authorization")); // Expose token if necessary
+                corsConfig.setAllowCredentials(true);
+                return corsConfig;
+            }))
+            .authorizeHttpRequests()
+            .requestMatchers("/login", "/register/**", "/verifyEmail/**", "/addService", "/upload-image")
+            .permitAll()  // Permet l'accès à toutes ces routes sans authentification
+            .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
+            .and()
+            .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
