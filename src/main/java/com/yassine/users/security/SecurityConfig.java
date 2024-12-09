@@ -29,12 +29,9 @@ public class SecurityConfig {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    AuthenticationManager authMgr;
-
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http, 
-                                             BCryptPasswordEncoder bCryptPasswordEncoder, 
+    public AuthenticationManager authManager(HttpSecurity http,
+                                             BCryptPasswordEncoder bCryptPasswordEncoder,
                                              UserDetailsService userDetailsService) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                    .userDetailsService(userDetailsService)
@@ -52,7 +49,7 @@ public class SecurityConfig {
                 @Override
                 public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                     CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app"));
+                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Remplacez par votre frontend
                     cors.setAllowedMethods(Collections.singletonList("*"));
                     cors.setAllowCredentials(true);
                     cors.setAllowedHeaders(Collections.singletonList("*"));
@@ -62,9 +59,9 @@ public class SecurityConfig {
                 }
             }))
             .authorizeHttpRequests()
-            .requestMatchers("/loginn", "/register/**", "/verifyEmail/**").permitAll()
-            .anyRequest().authenticated();
-            
+            .requestMatchers("/login").permitAll() // Autorise uniquement le login sans authentification
+            .requestMatchers("/register/**", "/verifyEmail/**").authenticated() // Exige authentification pour ces endpoints
+            .anyRequest().permitAll(); // Autorise tous les autres endpoints
         
         return http.build();
     }
