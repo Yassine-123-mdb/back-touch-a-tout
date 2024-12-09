@@ -27,24 +27,24 @@ public class ServiceController {
     @Autowired
 
 
-    @PostMapping("/add/{userId}")
-    public ResponseEntity<Services> addService(@PathVariable Long userId, @RequestBody Services service) {
-        return ResponseEntity.ok(serviceService.addService(userId, service));
+    @PostMapping("/add/{user_id}")
+    public ResponseEntity<Services> addService(@PathVariable Long user_id, @RequestBody Services service) {
+        return ResponseEntity.ok(serviceService.addService(user_id, service));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Services>> getServicesByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(serviceService.getServicesByUser(userId));
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<List<Services>> getServicesByUser(@PathVariable Long user_id) {
+        return ResponseEntity.ok(serviceService.getServicesByUser(user_id));
     }
 
-    @PutMapping("/update/{serviceId}")
-    public ResponseEntity<Services> updateService(@PathVariable Long serviceId, @RequestBody Services serviceDetails) {
-        return ResponseEntity.ok(serviceService.updateService(serviceId, serviceDetails));
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Services> updateService(@PathVariable Long id, @RequestBody Services serviceDetails) {
+        return ResponseEntity.ok(serviceService.updateService(id, serviceDetails));
     }
 
-    @DeleteMapping("/delete/{serviceId}")
-    public ResponseEntity<String> deleteService(@PathVariable Long serviceId) {
-        serviceService.deleteService(serviceId);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteService(@PathVariable Long id) {
+        serviceService.deleteService(id);
         return ResponseEntity.ok("Service deleted successfully!");
     }
 
