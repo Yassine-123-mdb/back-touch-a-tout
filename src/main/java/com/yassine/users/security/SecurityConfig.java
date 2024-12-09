@@ -61,8 +61,8 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests()
             .requestMatchers("/login").permitAll() // Autorise uniquement le login sans authentification
-            .requestMatchers("/register/**", "/verifyEmail/**").authenticated() // Exige authentification pour ces endpoints
-            .anyRequest().permitAll(); // Autorise tous les autres endpoints
+            .requestMatchers("/register/**", "/verifyEmail/**") // Exige authentification pour ces endpoints
+            .permitAll().anyRequest().authenticated(); // Autorise tous les autres endpoints
         
         return http.build();
     }
