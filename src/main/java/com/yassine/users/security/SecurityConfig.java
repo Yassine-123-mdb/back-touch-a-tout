@@ -1,5 +1,7 @@
 package com.yassine.users.security;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,41 +17,45 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Collections;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Autowired
-    UserDetailsService userDetailsService;
-
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http,
-                                             BCryptPasswordEncoder bCryptPasswordEncoder,
-                                             UserDetailsService userDetailsService) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                   .userDetailsService(userDetailsService)
-                   .passwordEncoder(bCryptPasswordEncoder)
-                   .and()
-                   .build();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+	
+	@Autowired
+ 	UserDetailsService userDetailsService;
+ 	
+ 	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+ 	
+ 	@Autowired
+ 	AuthenticationManager authMgr;
+	
+	
+ 	@Bean
+	public AuthenticationManager authManager(HttpSecurity http, 
+			BCryptPasswordEncoder bCryptPasswordEncoder, 
+			UserDetailsService userDetailsService) 
+	  throws Exception {
+	    return http.getSharedObject(AuthenticationManagerBuilder.class)
+	      .userDetailsService(userDetailsService)
+	      .passwordEncoder(bCryptPasswordEncoder)
+	      .and()
+	      .build();
+	}
+ 	
+ 	 @Bean
+     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
+		    http.csrf().disable()
+		    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		    
+		    .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
                 @Override
                 public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                     CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app")); // Remplacez par votre frontend
+                    cors.setAllowedOrigins(Collections.singletonList("https://touche-tout.vercel.app"));
                     cors.setAllowedMethods(Collections.singletonList("*"));
                     cors.setAllowCredentials(true);
                     cors.setAllowedHeaders(Collections.singletonList("*"));
@@ -58,11 +64,12 @@ public class SecurityConfig {
                     return cors;
                 }
             }))
-            .authorizeHttpRequests()
-            .requestMatchers("/login").permitAll() // Autorise uniquement le login sans authentification
-            .requestMatchers("/register/**", "/verifyEmail/**").authenticated() // Exige authentification pour ces endpoints
-            .anyRequest().permitAll(); // Autorise tous les autres endpoints
-        
-        return http.build();
-    }
+            
+		    
+		    
+		                        .authorizeHttpRequests()
+		                        .requestMatchers("/login","/register/**","/verifyEmail/**").permitAll()
+		                        .anyRequest();
+		    return http.build();
+	}
 }
