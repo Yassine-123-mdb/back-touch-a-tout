@@ -22,7 +22,7 @@ import com.yassine.users.service.UserService;
 import com.yassine.users.service.register.RegistrationRequest;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*")
 public class UserRestController {
 	@Autowired
 	UserService userService;
@@ -51,15 +51,6 @@ public class UserRestController {
 		return userService.validateToken(token);
 	}
 	
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-	    try {
-	        User user = userService.authenticateUser(loginRequest);
-	        return ResponseEntity.ok(user);
-	    } catch (Exception e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
-	    }
-	}
 
 
 	

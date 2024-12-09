@@ -1,12 +1,15 @@
 package com.yassine.users.restControllers;
 
 import com.yassine.users.entities.Services;
+import com.yassine.users.entities.User;
 import com.yassine.users.service.ServiceService;
+import com.yassine.users.service.UserService;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +19,8 @@ public class ServiceController {
 
     @Autowired
     private ServiceService serviceService;
+    @Autowired
+	UserService userService;
 
     @PostMapping("/addService")
     public Services addService(@RequestBody Services service) {
@@ -35,5 +40,14 @@ public class ServiceController {
             return "Erreur lors du téléchargement de l'image";
         }
     }
+    @PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+	    try {
+	        User user = userService.authenticateUser(loginRequest);
+	        return ResponseEntity.ok(user);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body(e.getMessage());
+	    }
+	}
 
 }
