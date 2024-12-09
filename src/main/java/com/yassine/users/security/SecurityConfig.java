@@ -63,10 +63,8 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests()
             .requestMatchers("/login", "/register/**", "/verifyEmail/**").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilter(new JWTAuthenticationFilter(authMgr));
+            .anyRequest().authenticated();
+            
         
         return http.build();
     }
