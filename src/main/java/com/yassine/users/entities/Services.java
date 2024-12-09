@@ -22,7 +22,6 @@ public class Services {
     private String notes;       // Notes spéciales
     private String image;       // Chemin de l'image
 
-    // Relation ManyToOne avec User
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
