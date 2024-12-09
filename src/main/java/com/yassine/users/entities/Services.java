@@ -22,8 +22,4 @@ public class Services {
     private String notes; // Notes spéciales pour le service
     private String image; // URL ou chemin de l'image du service
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // Changez le type de Long à User
-
 }

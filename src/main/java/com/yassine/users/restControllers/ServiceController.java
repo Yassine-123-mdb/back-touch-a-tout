@@ -24,36 +24,13 @@ public class ServiceController {
 	UserService userService;
 
     // Ajouter un service pour un utilisateur
-    @PostMapping("/add")
+    @PostMapping("/addService")
     public Services addService(@RequestBody Services service, @RequestParam Long userId) {
-        User user = userService.getUserById(userId);  // Récupérez l'utilisateur
-        service.setUser(user);  // Définissez l'utilisateur dans le service
+        
         return serviceService.addService(service);
     }
 
-    // Récupérer tous les services
-    @GetMapping("/all")
-    public List<Services> getAllServices() {
-        return serviceService.getAllServices();
-    }
-
-    // Récupérer les services d'un utilisateur
-    @GetMapping("/user/{userId}")
-    public List<Services> getServicesByUser(@PathVariable Long userId) {
-        return serviceService.getServicesByUserId(userId);
-    }
-
-    // Mettre à jour un service
-    @PutMapping("/{id}")
-    public Services updateService(@PathVariable Long id, @RequestBody Services updatedService) {
-        return serviceService.updateService(id, updatedService);
-    }
-
-    // Supprimer un service
-    @DeleteMapping("/{id}")
-    public void deleteService(@PathVariable Long id) {
-        serviceService.deleteService(id);
-    }
+  
  // Ajout d'une méthode pour gérer l'upload d'image dans le backend (si nécessaire)
     @PostMapping("/upload-image")
     public String uploadImage(@RequestParam("file") MultipartFile file) {
