@@ -1,6 +1,7 @@
 package com.yassine.users.service;
 
 import com.yassine.users.entities.Services;
+import com.yassine.users.entities.User;
 import com.yassine.users.repos.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Autowired
     private ServiceRepository serviceRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Services addService(Services service) {
@@ -25,7 +28,8 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<Services> getServicesByUserId(Long userId) {
-        return serviceRepository.findByUserId(userId);
+        User user = userService.getUserById(userId);  // Utilisez la méthode pour obtenir l'utilisateur
+        return serviceRepository.findByUser(user);    // Passez l'utilisateur entier à la méthode repository
     }
 
     @Override

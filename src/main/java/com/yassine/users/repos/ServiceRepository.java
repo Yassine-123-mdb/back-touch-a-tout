@@ -6,7 +6,6 @@ import com.yassine.users.entities.User;
 
 import java.util.List;
 
-	public interface ServiceRepository extends JpaRepository<Services, Long> {
-	    List<Services> findByUser(User user); // Trouver les services en fonction de l'utilisateur
-	}
-
+public interface ServiceRepository extends JpaRepository<Services, Long> {
+	List<Services> findByUser(User user);
+}

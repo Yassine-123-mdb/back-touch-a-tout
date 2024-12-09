@@ -26,8 +26,8 @@ public class ServiceController {
     // Ajouter un service pour un utilisateur
     @PostMapping("/add")
     public Services addService(@RequestBody Services service, @RequestParam Long userId) {
-        User user = userService.getUserById(userId);
-        service.setUser(user);
+        User user = userService.getUserById(userId);  // Récupérez l'utilisateur
+        service.setUser(user);  // Définissez l'utilisateur dans le service
         return serviceService.addService(service);
     }
 

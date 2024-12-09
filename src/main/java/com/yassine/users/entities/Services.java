@@ -24,5 +24,6 @@ public class Services {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // L'utilisateur qui a créé le service
+    private User user;  // Changez le type de Long à User
+
 }
