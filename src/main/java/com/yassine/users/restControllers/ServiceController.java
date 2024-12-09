@@ -40,7 +40,7 @@ public class ServiceController {
             return "Erreur lors du téléchargement de l'image";
         }
     }
-    @PostMapping("/login")
+    @PostMapping("/loginn")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 	    try {
 	        User user = userService.authenticateUser(loginRequest);
