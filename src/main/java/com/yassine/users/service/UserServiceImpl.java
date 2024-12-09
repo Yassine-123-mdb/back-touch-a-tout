@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         newUser.setTel(request.getTel());
         newUser.setSiret(request.getSiret());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        newUser.setEnabled(false);
+        newUser.setEnabled(true);
 
         Role r = roleRep.findByRole(request.getRoles());
         List<Role> roles = new ArrayList<>();
