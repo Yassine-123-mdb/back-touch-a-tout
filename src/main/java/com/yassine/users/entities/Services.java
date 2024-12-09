@@ -14,12 +14,15 @@ public class Services {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title; // Titre du service
-    private String description; // Description du service
-    private double price; // Prix du service
-    private String category; // Catégorie du service
-    private int duration; // Durée estimée (en minutes)
-    private String notes; // Notes spéciales pour le service
-    private String image; // URL ou chemin de l'image du service
+    private String title;       // Titre du service
+    private String description; // Description
+    private double price;       // Prix
+    private String category;    // Catégorie
+    private int duration;       // Durée estimée en minutes
+    private String notes;       // Notes spéciales
+    private String image;       // Chemin de l'image
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
