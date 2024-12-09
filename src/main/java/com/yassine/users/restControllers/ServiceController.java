@@ -7,6 +7,7 @@ import com.yassine.users.service.UserService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,36 @@ public class ServiceController {
     @Autowired
 	UserService userService;
 
-    @PostMapping("/addService")
-    public Services addService(@RequestBody Services service) {
+    // Ajouter un service pour un utilisateur
+    @PostMapping("/add")
+    public Services addService(@RequestBody Services service, @RequestParam Long userId) {
+        User user = userService.getUserById(userId);
+        service.setUser(user);
         return serviceService.addService(service);
+    }
+
+    // Récupérer tous les services
+    @GetMapping("/all")
+    public List<Services> getAllServices() {
+        return serviceService.getAllServices();
+    }
+
+    // Récupérer les services d'un utilisateur
+    @GetMapping("/user/{userId}")
+    public List<Services> getServicesByUser(@PathVariable Long userId) {
+        return serviceService.getServicesByUserId(userId);
+    }
+
+    // Mettre à jour un service
+    @PutMapping("/{id}")
+    public Services updateService(@PathVariable Long id, @RequestBody Services updatedService) {
+        return serviceService.updateService(id, updatedService);
+    }
+
+    // Supprimer un service
+    @DeleteMapping("/{id}")
+    public void deleteService(@PathVariable Long id) {
+        serviceService.deleteService(id);
     }
  // Ajout d'une méthode pour gérer l'upload d'image dans le backend (si nécessaire)
     @PostMapping("/upload-image")
@@ -40,6 +68,11 @@ public class ServiceController {
             return "Erreur lors du téléchargement de l'image";
         }
     }
+    
+    
+    
+    
+    
     @PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 	    try {

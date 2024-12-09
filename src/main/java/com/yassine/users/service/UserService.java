@@ -20,6 +20,8 @@ public interface UserService {
 	public void sendEmailUser(User u, String code);
 	public User validateToken(String code);
     public User authenticateUser(LoginRequest loginRequest) ;
+    User getUserById(Long id);
+
 
 
 }

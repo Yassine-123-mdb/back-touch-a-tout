@@ -1,7 +1,5 @@
 package com.yassine.users.entities;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +21,8 @@ public class Services {
     private int duration; // Durée estimée (en minutes)
     private String notes; // Notes spéciales pour le service
     private String image; // URL ou chemin de l'image du service
-    
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // L'utilisateur qui a créé le service
 }
