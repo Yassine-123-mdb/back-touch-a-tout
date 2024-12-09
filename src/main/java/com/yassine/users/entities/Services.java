@@ -24,6 +24,6 @@ public class Services {
 
     // Relation ManyToOne avec User
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 }
