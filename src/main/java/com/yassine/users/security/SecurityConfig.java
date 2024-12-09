@@ -62,7 +62,7 @@ public class SecurityConfig {
                 }
             }))
             .authorizeHttpRequests()
-            .requestMatchers("/login", "/register/**", "/verifyEmail/**").permitAll()
+            .requestMatchers("/register/**", "/verifyEmail/**").permitAll()
             .anyRequest().authenticated();
             
         
