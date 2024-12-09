@@ -22,7 +22,7 @@ import com.yassine.users.service.UserService;
 import com.yassine.users.service.register.RegistrationRequest;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class UserRestController {
 	@Autowired
 	UserService userService;
