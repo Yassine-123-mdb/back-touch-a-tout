@@ -50,8 +50,6 @@ public class UserRestController {
 	public User verifyEmail(@PathVariable("token") String token) {
 		return userService.validateToken(token);
 	}
-	
-
 
 	
 }
