@@ -60,7 +60,7 @@ public class SecurityConfig {
                 }
             }))
             .authorizeHttpRequests()
-            .requestMatchers("/login").permitAll() // Autorise uniquement le login sans authentification
+            .requestMatchers("/login","addService").permitAll() // Autorise uniquement le login sans authentification
             .requestMatchers("/register/**", "/verifyEmail/**") // Exige authentification pour ces endpoints
             .permitAll().anyRequest().authenticated(); // Autorise tous les autres endpoints
         
