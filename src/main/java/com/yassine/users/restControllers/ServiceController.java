@@ -32,61 +32,18 @@ public class ServiceController {
      * @return La réponse avec le service ajouté
      */
     @PostMapping("/add/{userId}")
-    public ResponseEntity<?> addService(
-            @PathVariable("userId") Long userId,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("price") double price,
-            @RequestParam("category") String category,
-            @RequestParam(value = "duration", required = false) Integer duration,
-            @RequestParam(value = "notes", required = false) String notes,
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Services> addService(@PathVariable("userId") Long userId, @RequestBody Services service) {
         try {
-            // Vérification si l'utilisateur existe
+            // Vérification si l'utilisateur existe avant d'ajouter le service
             User user = userService.getUserById(userId);
             if (user == null) {
-                return ResponseEntity.badRequest().body("Utilisateur non trouvé");
+                return ResponseEntity.badRequest().body(null); // Retour d'un code 400 si l'utilisateur n'existe pas
             }
-
-            // Gestion de l'image
-            String imagePath = null;
-            if (image != null && !image.isEmpty()) {
-                String uploadDir = "uploads/images/"; // Dossier où les images seront enregistrées
-                File uploadDirFile = new File(uploadDir);
-                if (!uploadDirFile.exists()) {
-                    uploadDirFile.mkdirs(); // Crée le répertoire s'il n'existe pas
-                }
-
-                String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-                File destFile = new File(uploadDir + fileName);
-                image.transferTo(destFile);
-                imagePath = uploadDir + fileName; // Chemin de l'image sauvegardée
-            }
-
-            // Création du service
-            Services service = new Services();
-            service.setTitle(title);
-            service.setDescription(description);
-            service.setPrice(price);
-            service.setCategory(category);
-            service.setDuration(duration);
-            service.setNotes(notes);
-            service.setImage(imagePath); // Ajout du chemin de l'image
-            service.setUser(user);
-
-            // Enregistrement du service
-            Services savedService = serviceService.addService(userId, service);
-            return ResponseEntity.ok(savedService);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Erreur lors du téléchargement de l'image");
+            return ResponseEntity.ok(serviceService.addService(userId, service));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Erreur lors de l'ajout du service");
+            return ResponseEntity.status(500).body(null); // Retour d'un code 500 en cas d'erreur
         }
     }
-
 
     /**
      * Récupérer tous les services associés à un utilisateur
