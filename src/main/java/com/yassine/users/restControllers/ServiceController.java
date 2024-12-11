@@ -55,7 +55,7 @@ public class ServiceController {
         return ResponseEntity.ok(serviceService.getServicesByUser(userId));
     }
     
-    @GetMapping("/tous")
+    @GetMapping("/all")
     public ResponseEntity<List<Services>> getAllServices() {
         return ResponseEntity.ok(serviceService.getAllServices());
     }
