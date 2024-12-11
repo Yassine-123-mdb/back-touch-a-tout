@@ -62,7 +62,7 @@ public class SecurityConfig {
             .authorizeHttpRequests()
             .requestMatchers("/api/services/login","/api/services/upload-image","api/services/add/{userId}",
             		"api/services/user/{userId}","api/services/update/{serviceId}",
-            		"api/services/delete/{serviceId}","api/services/all").permitAll() // Autorise uniquement le login sans authentification
+            		"api/services/delete/{serviceId}","api/services/tous").permitAll() // Autorise uniquement le login sans authentification
             .requestMatchers("/register/**", "/verifyEmail/**") // Exige authentification pour ces endpoints
             .permitAll().anyRequest().authenticated(); // Autorise tous les autres endpoints
         
