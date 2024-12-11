@@ -54,4 +54,9 @@ public class ServiceServiceImpl implements ServiceService {
                 .orElseThrow(() -> new RuntimeException("Service not found with ID: " + serviceId));
         serviceRepository.delete(service);
     }
+    
+    @Override
+    public List<Services> getAllServices() {
+        return serviceRepository.findAll();
+    }
 }

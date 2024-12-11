@@ -9,4 +9,6 @@ public interface ServiceService {
     List<Services> getServicesByUser(Long userId);
     Services updateService(Long serviceId, Services serviceDetails);
     void deleteService(Long serviceId);
+    public List<Services> getAllServices();
+
 }

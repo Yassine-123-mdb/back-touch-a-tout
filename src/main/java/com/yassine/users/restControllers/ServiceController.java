@@ -54,6 +54,11 @@ public class ServiceController {
     public ResponseEntity<List<Services>> getServicesByUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(serviceService.getServicesByUser(userId));
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<Services>> getAllServices() {
+        return ResponseEntity.ok(serviceService.getAllServices());
+    }
+
 
     /**
      * Mise à jour d'un service
