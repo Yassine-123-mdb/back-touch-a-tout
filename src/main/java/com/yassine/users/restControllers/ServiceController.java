@@ -44,7 +44,7 @@ public class ServiceController {
             return ResponseEntity.status(500).body(null); // Retour d'un code 500 en cas d'erreur
         }
     }
-
+    
     /**
      * Récupérer tous les services associés à un utilisateur
      * @param userId L'ID de l'utilisateur
@@ -54,12 +54,6 @@ public class ServiceController {
     public ResponseEntity<List<Services>> getServicesByUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(serviceService.getServicesByUser(userId));
     }
-    
-    @GetMapping("/allService")
-    public ResponseEntity<List<Services>> getAllServices() {
-        return ResponseEntity.ok(serviceService.getAllServices());
-    }
-
 
     /**
      * Mise à jour d'un service

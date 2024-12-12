@@ -7,6 +7,7 @@ import com.yassine.users.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +55,17 @@ public class ServiceServiceImpl implements ServiceService {
                 .orElseThrow(() -> new RuntimeException("Service not found with ID: " + serviceId));
         serviceRepository.delete(service);
     }
-    
     @Override
     public List<Services> getAllServices() {
-        return serviceRepository.findAll();
+        // Récupérer tous les utilisateurs ayant le rôle "PRESTATAIRE"
+        List<User> prestataires = userRepository.findAll();
+        List<Services> allServices = new ArrayList<>();
+
+        // Parcourir les prestataires et récupérer leurs services
+        for (User prestataire : prestataires) {
+            allServices.addAll(prestataire.getServices());
+        }
+
+        return allServices;
     }
 }

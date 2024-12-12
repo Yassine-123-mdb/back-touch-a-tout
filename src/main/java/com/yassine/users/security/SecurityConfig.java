@@ -29,6 +29,7 @@ public class SecurityConfig {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http,
@@ -65,7 +66,7 @@ public class SecurityConfig {
                     "/api/services/update/{serviceId}", "/api/services/delete/{serviceId}")
             .permitAll()
         	// Autorise uniquement le login sans authentification
-            .requestMatchers("/register/**", "/verifyEmail/**", "/api/services/allService") // Exige authentification pour ces endpoints
+            .requestMatchers("/register/**", "/verifyEmail/**","/all","/allService") // Exige authentification pour ces endpoints
             .permitAll().anyRequest().authenticated(); // Autorise tous les autres endpoints
         
         return http.build();

@@ -6,4 +6,5 @@ import com.yassine.users.entities.Services;
 import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<Services, Long> {
+	List<Services> findAll();
 }
