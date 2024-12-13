@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservations")
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping("/api/reservations")
 public class ReservationController {
 
     @Autowired
