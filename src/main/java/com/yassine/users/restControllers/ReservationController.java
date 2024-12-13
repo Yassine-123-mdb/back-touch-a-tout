@@ -1,13 +1,11 @@
 package com.yassine.users.restControllers;
 
 import com.yassine.users.entities.Reservation;
+import com.yassine.users.entities.ReservationRequest;
 import com.yassine.users.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
@@ -17,21 +15,21 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Reservation> createReservation(@RequestParam Long userId,
-                                                         @RequestParam Long serviceId,
-                                                         @RequestParam Date reservationDate,
-                                                         @RequestParam Date reservationTime) {
+    @PostMapping("/create/{userId}")
+    public ResponseEntity<Reservation> createReservation(
+            @PathVariable Long userId, 
+            @RequestBody ReservationRequest request) {
+        
         try {
-            Reservation reservation = reservationService.createReservation(userId, serviceId, reservationDate, reservationTime);
+            // Utilisation de userId et des données de request pour créer la réservation
+            Reservation reservation = reservationService.createReservation(
+                    userId, 
+                    request.getServiceId(), 
+                    request.getReservationDate(), 
+                    request.getReservationTime());
             return ResponseEntity.ok(reservation);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
         }
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Reservation>> getReservationsByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(reservationService.getReservationsByUser(userId));
     }
 }

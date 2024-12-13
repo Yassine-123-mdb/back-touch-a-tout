@@ -22,7 +22,7 @@ public class Reservation {
     private User user;  // L'utilisateur qui réserve (client)
 
     @ManyToOne
-    @JoinColumn(name = "service_id", nullable = false)
+    @JoinColumn(name = "service_id")
     private Services service;  // Le service réservé
 
     @Temporal(TemporalType.DATE)
