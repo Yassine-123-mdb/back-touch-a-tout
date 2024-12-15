@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
 @NoArgsConstructor
@@ -18,10 +21,12 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
     private User user;  // L'utilisateur qui réserve (client)
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "service_id")
     private Services service;  // Le service réservé
 

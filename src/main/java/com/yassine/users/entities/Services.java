@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +25,7 @@ public class Services {
     private String image;       // Chemin de l'image
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private User user;
 }
