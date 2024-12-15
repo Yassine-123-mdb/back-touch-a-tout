@@ -9,7 +9,7 @@ public class ReservationRequest {
     private Long serviceId;
     private Date reservationDate;
 
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     private Date reservationTime;
 
     // Getters and Setters
